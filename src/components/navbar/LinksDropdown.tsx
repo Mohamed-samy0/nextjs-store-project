@@ -16,7 +16,7 @@ import { auth } from "@clerk/nextjs/server";
 
 async function LinksDropdown() {
   const { userId } = await auth();
-
+  const isAdminUser = userId === process.env.ADMIN_USER_ID;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -44,6 +44,7 @@ async function LinksDropdown() {
         {userId && (
           <>
             {links.map((link) => {
+              if (link.label === "dashboard" && !isAdminUser) return null;
               return (
                 <DropdownMenuItem key={link.href}>
                   <Link href={link.href} className="capitalize w-full">
