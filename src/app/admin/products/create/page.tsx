@@ -1,4 +1,41 @@
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { faker } from "@faker-js/faker";
+
+const createProductAction = async (formData: FormData) => {
+  "use server";
+  const name = faker.commerce.productName();
+  console.log(name);
+};
+
 function CreateProductPage() {
-  return <div>CreateProductPage</div>;
+  const name = faker.commerce.productName();
+  const company = faker.company.name();
+  const description = faker.lorem.paragraph({ min: 10, max: 12 });
+  return (
+    <section>
+      <h1 className="text-2xl font-semibold mb-8 capitalize">Create Product</h1>
+      <div className="border rounded-md p-8">
+        <form action={createProductAction}>
+          <div className="mb-2">
+            <Label htmlFor="name" className="capitalize">
+              Product Name
+            </Label>
+            <Input
+              type="text"
+              id="name"
+              name="name"
+              className="border rounded-md p-2"
+              defaultValue={name}
+            />
+          </div>
+          <Button size="lg" type="submit">
+            Create Product
+          </Button>
+        </form>
+      </div>
+    </section>
+  );
 }
 export default CreateProductPage;
