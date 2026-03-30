@@ -25,6 +25,27 @@ export const productSchema = z.object({
   ),
 });
 
+export const imageSchema = z.object({
+  image: validateImage(),
+});
+
+export function validateImage() {
+  const maxSize = 1024 * 1024;
+  return z
+    .instanceof(File, {
+      message: "image is required",
+    })
+    .refine((file) => file.size > 0, {
+      message: "image is required",
+    })
+    .refine((file) => file.size <= maxSize, {
+      message: "image must be less than 1MB",
+    })
+    .refine((file) => file.type.startsWith("image/"), {
+      message: "image must be a valid image type",
+    });
+}
+
 export function validateProduct<T>(
   schema: z.ZodType<T>,
   data: unknown,

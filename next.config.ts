@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 
-const nextConfig = {
+const nextConfig: NextConfig = {
   env: {
     DATABASE_URL: process.env.DATABASE_URL,
   },
@@ -11,6 +11,11 @@ const nextConfig = {
         hostname: "images.pexels.com",
       },
     ],
+  },
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "10mb",
+    },
   },
 };
 
