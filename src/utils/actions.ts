@@ -3,7 +3,7 @@
 import db from "@/utils/db";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { productSchema } from "./schemas";
+import { productSchema, validateProduct } from "./schemas";
 
 const authenticateUser = async () => {
   const user = await currentUser();
@@ -57,8 +57,18 @@ export const createProductAction = async (
 
   try {
     const rawData = Object.fromEntries(formData.entries());
-    const validatedData = productSchema.parse(rawData);
-    console.log(validatedData);
+    const result = validateProduct(productSchema, rawData);
+    if (!result.success) {
+      return { message: result.error };
+    }
+    const validatedData = result.data;
+    await db.product.create({
+      data: {
+        ...validatedData,
+        image: "/images/product-3.jpg",
+        clerkId: user.id,
+      },
+    });
 
     return { message: "product created" };
   } catch (error) {
