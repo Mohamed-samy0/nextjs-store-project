@@ -12,6 +12,12 @@ const authenticateUser = async () => {
   return user;
 };
 
+const authAdminUser = async () => {
+  const user = await authenticateUser();
+  if (user.id !== process.env.ADMIN_USER_ID) redirect("/");
+  return user;
+};
+
 const renderErrorMessage = (error: unknown): { message: string } => {
   console.log(error);
   return { message: error instanceof Error ? error.message : "there was an error" };
@@ -80,4 +86,14 @@ export const createProductAction = async (
     return renderErrorMessage(error);
   }
   redirect("/admin/products");
+};
+
+export const fetchAdminProducts = async () => {
+  await authAdminUser();
+  const products = await db.product.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  return products;
 };
