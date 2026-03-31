@@ -5,6 +5,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { imageSchema, productSchema, validateProduct } from "./schemas";
 import { uploadImage } from "./supabase";
+import { revalidatePath } from "next/cache";
 
 const authenticateUser = async () => {
   const user = await currentUser();
@@ -96,4 +97,19 @@ export const fetchAdminProducts = async () => {
     },
   });
   return products;
+};
+
+export const deleteProductAction = async (productId: string) => {
+  await authAdminUser();
+  try {
+    await db.product.delete({
+      where: {
+        id: productId,
+      },
+    });
+  } catch (error) {
+    return renderErrorMessage(error);
+  }
+  revalidatePath("/admin/products");
+  redirect("/admin/products");
 };

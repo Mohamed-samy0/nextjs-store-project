@@ -12,6 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { IconButton } from "@/components/form/Button";
 
 async function AdminProductsPage() {
   const products = await fetchAdminProducts();
@@ -48,7 +49,10 @@ async function AdminProductsPage() {
                 <TableCell>{company}</TableCell>
                 <TableCell>{formatCurrency(price)}</TableCell>
 
-                <TableCell className="flex items-center gap-x-2"></TableCell>
+                <TableCell className="flex items-center gap-x-2">
+                  <IconButton actionType="edit" />
+                  <IconButton actionType="delete" />
+                </TableCell>
               </TableRow>
             );
           })}

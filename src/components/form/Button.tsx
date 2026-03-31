@@ -60,12 +60,7 @@ export const CardSignInButton = () => {
 export const CardSubmitButton = ({ isFavorite }: { isFavorite: boolean }) => {
   const { pending } = useFormStatus();
   return (
-    <Button
-      type="submit"
-      size="icon"
-      variant="outline"
-      className="p-2 cursor-pointer"
-    >
+    <Button type="submit" size="icon" variant="outline" className="p-2 cursor-pointer">
       {pending ? (
         <Loader2 className="animate-spin" />
       ) : isFavorite ? (
@@ -73,6 +68,34 @@ export const CardSubmitButton = ({ isFavorite }: { isFavorite: boolean }) => {
       ) : (
         <FaRegHeart />
       )}
+    </Button>
+  );
+};
+
+type actionType = "edit" | "delete";
+
+export const IconButton = ({ actionType }: { actionType: actionType }) => {
+  const { pending } = useFormStatus();
+  const renderIcon = (): React.ReactNode => {
+    switch (actionType) {
+      case "edit":
+        return <LuSquarePen />;
+      case "delete":
+        return <LuTrash2 />;
+      default:
+        const _exhaustiveCheck: never = actionType;
+        throw new Error(`Unhandled action type: ${_exhaustiveCheck}`);
+    }
+  };
+  return (
+    <Button
+      type="submit"
+      size="icon"
+      variant="link"
+      className="p-2 cursor-pointer"
+      disabled={pending}
+    >
+      {pending ? <Loader2 className="animate-spin" /> : renderIcon()}
     </Button>
   );
 };
