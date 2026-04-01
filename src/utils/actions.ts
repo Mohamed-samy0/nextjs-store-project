@@ -120,3 +120,28 @@ export const deleteProductAction = async (productId: string) => {
   revalidatePath("/admin/products");
   redirect("/admin/products");
 };
+
+export const fetchAdminProduct = async (productId: string) => {
+  await authAdminUser();
+  const product = await db.product.findUnique({
+    where: {
+      id: productId,
+    },
+  });
+  if (!product) redirect("/admin/products");
+  return product;
+};
+
+export const updateProductAction = async (
+  prevState: { message: string } | null,
+  formData: FormData,
+) => {
+  return { message: "Product updated successfully" };
+};
+
+export const updateProductImageAction = async (
+  prevState: { message: string } | null,
+  formData: FormData,
+) => {
+  return { message: "Product image updated successfully" };
+};
