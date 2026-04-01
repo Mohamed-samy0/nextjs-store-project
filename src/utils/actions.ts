@@ -136,12 +136,56 @@ export const updateProductAction = async (
   prevState: { message: string } | null,
   formData: FormData,
 ) => {
-  return { message: "Product updated successfully" };
+  await authAdminUser();
+  try {
+    const productId = formData.get("id") as string;
+    const rawData = Object.fromEntries(formData.entries());
+    const validateResult = validateProduct(productSchema, rawData);
+    if (!validateResult.success) {
+      return { message: validateResult.error };
+    }
+    const validatedData = validateResult.data;
+    await db.product.update({
+      where: {
+        id: productId,
+      },
+      data: {
+        ...validatedData,
+      },
+    });
+    revalidatePath("/admin/products");
+    return { message: "Product updated successfully" };
+  } catch (error) {
+    return renderErrorMessage(error);
+  }
 };
 
 export const updateProductImageAction = async (
   prevState: { message: string } | null,
   formData: FormData,
 ) => {
-  return { message: "Product image updated successfully" };
+  await authAdminUser();
+  try {
+    const image = formData.get("image") as File;
+    const productId = formData.get("id") as string;
+    const url = formData.get("url") as string;
+    const validateResult = validateProduct(imageSchema, { image });
+    if (!validateResult.success) {
+      return { message: validateResult.error };
+    }
+    const newUrl = await uploadImage(validateResult.data.image);
+    await deleteImage(url);
+    await db.product.update({
+      where: {
+        id: productId,
+      },
+      data: {
+        image: newUrl,
+      },
+    });
+    revalidatePath(`/admin/products/${productId}/edit`);
+    return { message: "Product image updated successfully" };
+  } catch (error) {
+    return renderErrorMessage(error);
+  }
 };
