@@ -4,7 +4,7 @@ import db from "@/utils/db";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { imageSchema, productSchema, validateProduct } from "./schemas";
-import { uploadImage } from "./supabase";
+import { deleteImage, uploadImage } from "./supabase";
 import { revalidatePath } from "next/cache";
 
 const authenticateUser = async () => {
@@ -102,6 +102,13 @@ export const fetchAdminProducts = async () => {
 export const deleteProductAction = async (productId: string) => {
   await authAdminUser();
   try {
+    const product = await db.product.findUnique({
+      where: {
+        id: productId,
+      },
+    });
+    if (!product) redirect("/admin/products");
+    await deleteImage(product.image);
     await db.product.delete({
       where: {
         id: productId,

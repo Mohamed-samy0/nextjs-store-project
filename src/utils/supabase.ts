@@ -17,3 +17,11 @@ export const uploadImage = async (image: File) => {
   if (!data) throw new Error("Image upload failed");
   return supabase.storage.from(bucket).getPublicUrl(newName).data.publicUrl;
 };
+
+export const deleteImage = async (imagePath: string) => {
+  const imageName = imagePath.split("/").pop();
+  if (!imageName) throw new Error("Image name not found");
+  const { data } = await supabase.storage.from(bucket).remove([imageName]);
+  if (!data) throw new Error("Image deletion failed");
+  return data;
+};
