@@ -189,3 +189,21 @@ export const updateProductImageAction = async (
     return renderErrorMessage(error);
   }
 };
+
+export const fetchFavoriteId = async ({ productId }: { productId: string }) => {
+  const user = await authenticateUser();
+  const favorite = await db.favorite.findFirst({
+    where: {
+      clerkId: user.id,
+      productId,
+    },
+    select: {
+      id: true,
+    },
+  });
+  return favorite?.id || null;
+};
+
+export const toggleFavoriteAction = async () => {
+  return { message: "Favorite toggled successfully" };
+};
