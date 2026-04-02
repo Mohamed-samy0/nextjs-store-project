@@ -5,9 +5,10 @@ import { formatCurrency } from "@/utils/format";
 import FavoriteToggleButton from "@/components/products/FavoriteToggleButton";
 import AddToCart from "@/components/single-product/AddToCart";
 import ProductRating from "@/components/single-product/ProductRating";
+import ShareButton from "@/components/single-product/ShareButton";
 
 async function SingleProductPage({ params }: { params: Promise<{ id: string }> }) {
-  const {id} = await params;
+  const { id } = await params;
   const product = await fetchSingleProduct(id);
   const { name, image, price, company, description } = product;
   const dollarAmount = formatCurrency(price);
@@ -28,7 +29,10 @@ async function SingleProductPage({ params }: { params: Promise<{ id: string }> }
         <div>
           <div className="flex gap-x-8 items-center">
             <h1 className="capitalize text-3xl font-bold tracking-tight">{name}</h1>
-            <FavoriteToggleButton productId={id} />
+            <div className="flex items-center gap-x-2">
+              <FavoriteToggleButton productId={id} />
+              <ShareButton name={name} productId={id} />
+            </div>
           </div>
           <ProductRating productId={id} />
           <h4 className="capitalize text-xl font-bold tracking-tight mt-2">{company}</h4>
