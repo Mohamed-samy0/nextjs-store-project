@@ -204,13 +204,13 @@ export const fetchFavoriteId = async ({ productId }: { productId: string }) => {
   return favorite?.id || null;
 };
 
-export const toggleFavoriteAction = async (prevState: {
+export const toggleFavoriteAction = async (payload: {
   productId: string;
   favoriteId: string | null;
   pathname: string;
 }) => {
   const user = await authenticateUser();
-  const { productId, favoriteId, pathname } = prevState;
+  const { productId, favoriteId, pathname } = payload;
   try {
     if (favoriteId) {
       await db.favorite.delete({
