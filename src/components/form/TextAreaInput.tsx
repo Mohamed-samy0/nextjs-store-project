@@ -10,7 +10,7 @@ type TextAreaInputProps = {
 function TextAreaInput({ name, labelText, defaultValue }: TextAreaInputProps) {
   return (
     <div className="mb-2">
-      <Label htmlFor={name} className="capitalize">
+      <Label htmlFor={name} className="capitalize text-base font-semibold mb-2 block">
         {labelText || name}
       </Label>
       <Textarea
@@ -18,7 +18,7 @@ function TextAreaInput({ name, labelText, defaultValue }: TextAreaInputProps) {
         name={name}
         defaultValue={defaultValue}
         rows={5}
-        className="leading-loose"
+        className="leading-loose p-4 text-base"
         required
       />
     </div>
