@@ -3,7 +3,7 @@
 import db from "@/utils/db";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { imageSchema, productSchema, validateProduct } from "./schemas";
+import { imageSchema, productSchema, reviewSchema, validateProduct } from "./schemas";
 import { deleteImage, uploadImage } from "./supabase";
 import { revalidatePath } from "next/cache";
 
@@ -250,7 +250,24 @@ export const createReviewAction = async (
   prevState: { message: string } | null,
   formData: FormData,
 ) => {
-  return { message: "review submitted successfully" };
+  const user = await authenticateUser();
+  try {
+    const rawData = Object.fromEntries(formData);
+    const result = validateProduct(reviewSchema, rawData);
+    if (!result.success) {
+      return { message: result.error };
+    }
+    await db.review.create({
+      data: {
+        ...result.data,
+        clerkId: user.id,
+      },
+    });
+    revalidatePath(`/products/${result.data.productId}`);
+    return { message: "review submitted successfully" };
+  } catch (error) {
+    return renderErrorMessage(error);
+  }
 };
 
 export const fetchProductReviews = async () => {};
