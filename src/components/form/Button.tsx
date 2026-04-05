@@ -99,3 +99,19 @@ export const IconButton = ({ actionType }: { actionType: actionType }) => {
     </Button>
   );
 };
+
+export const ProductSignInButton = () => {
+  return (
+    <SignInButton mode="modal">
+      <Button
+        type="button"
+        size="lg"
+        variant="outline"
+        className="p-2 mt-8 cursor-pointer"
+        asChild
+      >
+        Please Sign In
+      </Button>
+    </SignInButton>
+  );
+};
