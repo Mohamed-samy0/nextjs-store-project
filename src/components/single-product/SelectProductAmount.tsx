@@ -54,3 +54,4 @@ function SelectProductAmount(
     </>
   );
 }
+export default SelectProductAmount;

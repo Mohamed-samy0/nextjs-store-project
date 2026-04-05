@@ -107,8 +107,7 @@ export const ProductSignInButton = () => {
         type="button"
         size="lg"
         variant="outline"
-        className="p-2 mt-8 cursor-pointer"
-        asChild
+        className="p-2 mt-8 cursor-pointer bg-primary text-white hover:bg-primary/80 hover:text-white capitalize"
       >
         Please Sign In
       </Button>
