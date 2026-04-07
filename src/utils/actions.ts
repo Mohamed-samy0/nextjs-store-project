@@ -514,7 +514,32 @@ export const removeCartItemAction = async (
     return renderErrorMessage(error);
   }
 };
-export const updateCartItemAction = async () => {};
+export const updateCartItemAction = async ({
+  amount,
+  cartItemId,
+}: {
+  amount: number;
+  cartItemId: string;
+}) => {
+  const user = await authenticateUser();
+  try {
+    const cart = await fetchOrCreateCart({ userId: user.id, errorOnFailure: true });
+    await db.cartItem.update({
+      where: {
+        id: cartItemId,
+        cartId: cart.id,
+      },
+      data: {
+        amount,
+      },
+    });
+    await updateCart(cart);
+    revalidatePath("/cart");
+    return { message: "Item updated successfully" };
+  } catch (error) {
+    return renderErrorMessage(error);
+  }
+};
 
 export const createOrderAction = async (
   prevState: { message: string } | null,
