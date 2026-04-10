@@ -548,5 +548,53 @@ export const createOrderAction = async (
   prevState: { message: string } | null,
   formData: FormData,
 ) => {
-  return { message: "Order created successfully" };
+  const user = await authenticateUser();
+  try {
+    const cart = await fetchOrCreateCart({ userId: user.id, errorOnFailure: true });
+    const order = await db.order.create({
+      data: {
+        clerkId: user.id,
+        products: cart.numItemsInCart,
+        orderTotal: cart.orderTotal,
+        tax: cart.tax,
+        shipping: cart.shipping,
+        email: user.emailAddresses[0].emailAddress,
+      },
+    });
+    await db.cart.delete({
+      where: {
+        id: cart.id,
+      },
+    });
+  } catch (error) {
+    return renderErrorMessage(error);
+  }
+  redirect("/orders");
+};
+
+export const fetchUserOrders = async () => {
+  const user = await authenticateUser();
+  const orders = await db.order.findMany({
+    where: {
+      clerkId: user.id,
+      isPaid: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  return orders;
+};
+
+export const fetchAdminOrders = async () => {
+  await authenticateUser();
+  const orders = await db.order.findMany({
+    where: {
+      isPaid: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  return orders;
 };
