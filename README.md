@@ -11,7 +11,7 @@
 [![Stripe](https://img.shields.io/badge/Stripe-635BFF?style=for-the-badge&logo=stripe&logoColor=white)](https://stripe.com/)
 [![Clerk](https://img.shields.io/badge/Clerk-6C47FF?style=for-the-badge&logo=clerk&logoColor=white)](https://clerk.dev/)
 
-[Live Demo]((https://nextjs-store-project-alpha.vercel.app/))
+[Live Demo](https://nextjs-store-project-alpha.vercel.app/)
 
 </div>
 
