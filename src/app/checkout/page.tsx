@@ -1,9 +1,10 @@
 "use client";
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
-import React, { useCallback } from "react";
+import React, { useCallback, Suspense } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { EmbeddedCheckoutProvider, EmbeddedCheckout } from "@stripe/react-stripe-js";
+import LoadingTable from "@/components/global/LoadingTable";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string,
@@ -34,4 +35,10 @@ function CheckoutPage() {
   );
 }
 
-export default CheckoutPage;
+export default function Page() {
+  return (
+    <Suspense fallback={<LoadingTable />}>
+      <CheckoutPage />
+    </Suspense>
+  );
+}
