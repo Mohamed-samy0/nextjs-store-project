@@ -20,10 +20,6 @@ function NavSearch() {
     router.push(`/products?${params.toString()}`);
   }, 500);
 
-  useEffect(() => {
-    debouncedSearchTerm(searchTerm);
-  }, [searchTerm, debouncedSearchTerm]);
-
   return (
     <Input
       type="text"
