@@ -452,12 +452,14 @@ export const updateCart = async (cart: Cart) => {
       createdAt: "asc",
     },
   });
-  let numItemsInCart = 0;
-  let cartTotal = 0;
-  cartItems.forEach((cartItem) => {
-    numItemsInCart += cartItem.amount;
-    cartTotal += cartItem.product.price * cartItem.amount;
-  });
+  const { numItemsInCart, cartTotal } = cartItems.reduce(
+    (totals, cartItem) => {
+      totals.numItemsInCart += cartItem.amount;
+      totals.cartTotal += cartItem.product.price * cartItem.amount;
+      return totals;
+    },
+    { numItemsInCart: 0, cartTotal: 0 },
+  );
   const tax = cart.taxRate * cartTotal;
   const shipping = cartTotal ? cart.shipping : 0;
   const orderTotal = cartTotal + tax + shipping;
