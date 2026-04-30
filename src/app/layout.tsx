@@ -9,19 +9,22 @@ import { ClerkProvider } from "@clerk/nextjs";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap",
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Next Store",
-  description: "A nifty store built with Next.js",
+  title: "Next Store | Modern eCommerce",
+  description: "A high-performance store built with Next.js and Prisma",
   icons: {
     icon: "/favicon.icon.png",
   },
+  keywords: ["eCommerce", "Next.js", "React", "Prisma"],
 };
 export default function RootLayout({
   children,
