@@ -5,7 +5,7 @@ import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { imageSchema, productSchema, reviewSchema, validateProduct } from "./schemas";
 import { deleteImage, uploadImage } from "./supabase";
-import { cacheTag, revalidatePath } from "next/cache";
+import { cacheTag, revalidatePath, updateTag } from "next/cache";
 import { Cart } from "@prisma/client";
 
 const authenticateUser = async () => {
@@ -37,6 +37,8 @@ export const fetchFeaturedProducts = async () => {
 };
 
 export const fetchAllProducts = async ({ searchTerm = "" }: { searchTerm: string }) => {
+  "use cache";
+  cacheTag("products");
   return await db.product.findMany({
     where: {
       OR: [
@@ -51,6 +53,8 @@ export const fetchAllProducts = async ({ searchTerm = "" }: { searchTerm: string
 };
 
 export const fetchSingleProduct = async (productId: string) => {
+  "use cache";
+  cacheTag("products");
   const product = await db.product.findUnique({
     where: {
       id: productId,
@@ -86,6 +90,9 @@ export const createProductAction = async (
         clerkId: user.id,
       },
     });
+    updateTag("products");
+    revalidatePath("/");
+    revalidatePath("/products");
   } catch (error) {
     return renderErrorMessage(error);
   }
@@ -117,6 +124,7 @@ export const deleteProductAction = async (productId: string) => {
         id: productId,
       },
     });
+    updateTag("products");
   } catch (error) {
     return renderErrorMessage(error);
   }
@@ -156,6 +164,7 @@ export const updateProductAction = async (
         ...validatedData,
       },
     });
+    updateTag("products");
     revalidatePath("/admin/products");
     return { message: "Product updated successfully" };
   } catch (error) {
@@ -267,6 +276,7 @@ export const createReviewAction = async (
       },
     });
     revalidatePath(`/products/${result.data.productId}`);
+    updateTag("products");
     return { message: "review submitted successfully" };
   } catch (error) {
     return renderErrorMessage(error);
