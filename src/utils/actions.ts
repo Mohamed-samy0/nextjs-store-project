@@ -5,7 +5,7 @@ import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { imageSchema, productSchema, reviewSchema, validateProduct } from "./schemas";
 import { deleteImage, uploadImage } from "./supabase";
-import { revalidatePath } from "next/cache";
+import { cacheTag, revalidatePath } from "next/cache";
 import { Cart } from "@prisma/client";
 
 const authenticateUser = async () => {
@@ -26,6 +26,8 @@ const renderErrorMessage = (error: unknown): { message: string } => {
 };
 
 export const fetchFeaturedProducts = async () => {
+  "use cache";
+  cacheTag("products");
   const products = await db.product.findMany({
     where: {
       featured: true,

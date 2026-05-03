@@ -1,3 +1,4 @@
+import Loading from "@/app/favorites/loading";
 import Container from "../global/Container";
 import CartButton from "./CartButton";
 import DarkMode from "./DarkMode";
@@ -19,9 +20,13 @@ function Navbar() {
           <NavSearch />
         </Suspense>
         <div className="flex gap-4 items-center ">
-          <CartButton />
           <DarkMode />
-          <LinksDropdown />
+          <Suspense fallback={<Loading />}>
+            <CartButton />
+          </Suspense>
+          <Suspense fallback={<Loading />}>
+            <LinksDropdown />
+          </Suspense>
         </div>
       </Container>
     </nav>
